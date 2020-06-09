@@ -106,7 +106,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 //Základní definice mapy
-mapboxgl.accessToken = 'pk.eyJ1IjoidXJiYW45NiIsImEiOiJjazEwZDJ1bWswNDdqM2hxZHhhejJzc2xpIn0.B3Yupx3wE-Le2P9BRjzCkg';
+mapboxgl.accessToken = 'ENTER YOUR ACCESS TOKEN';
 var map = new mapboxgl.Map({
 	container: 'map', //Div, ve kterém se vykreslí mapa
 	style: 'mapbox://styles/mapbox/streets-v11',
