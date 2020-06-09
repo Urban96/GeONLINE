@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="utf-8" />
+<title>GeONLINE</title>
+<meta name="keywords" content="HTML, CSS, JavaScript, Turf.js, Mapbox GL JS, GeONLINE">
+<meta name="author" content="Daniel Urban">
+
+<script src="mapbox-gl.js"></script>
+<script src='turf.min.js'></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+
+
+<link href="styles/mapbox-gl.css" rel="stylesheet" />
+<link rel="stylesheet" href="styles/styles.css">
+
+
+</head>
+<body>
+
+<script>
+    //Funkce přepíná formuláře k operacím
+  function ChoiceTree() {
+    if (document.getElementById('choice').value == 'buffer') {
+        SuitableLayer("everything");
+        document.getElementById('buffer-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('buffer-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'length') {
+        SuitableLayer("line");
+        document.getElementById('length-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('length-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'simplify') {
+        SuitableLayer("polygon");
+        document.getElementById('simplify-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('simplify-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'explode') {
+        SuitableLayer("polygon");
+        document.getElementById('explode-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('explode-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'linetopolygon')  {
+      SuitableLayer("line");
+        document.getElementById('linetopolygon-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('linetopolygon-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'voronoi') {
+        SuitableLayer("point");
+        document.getElementById('voronoi-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('voronoi-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'pointswithinpolygon') {
+        SuitableLayer("point");
+        SecondSuitableLayer("polygon");
+        document.getElementById('pointswithinpolygon-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('pointswithinpolygon-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'envelope') {
+        SuitableLayer("point");
+        document.getElementById('envelope-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('envelope-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'tin') {
+        SuitableLayer("point");
+        document.getElementById('tin-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'block';
+    } else {
+        document.getElementById('tin-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'area') {
+        SuitableLayer("polygon");
+        document.getElementById('area-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('area-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'centroid') {
+        SuitableLayer("everything");
+        document.getElementById('centroid-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('centroid-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'randompoints') {
+        document.getElementById('randompoints-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'none'; //zakryti volby vrstvy, neni potreba
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('randompoints-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'randomlines') {
+        document.getElementById('randomlines-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'none'; //zakryti volby vrstvy, neni potreba
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('randomlines-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'randompolygons') {
+        document.getElementById('randompolygons-extra').style.display = 'block';
+        document.getElementById('selectLayer').style.display = 'none'; //zakryti volby vrstvy, neni potreba
+        document.getElementById('selectAttribute').style.display = 'none';
+    } else {
+        document.getElementById('randompolygons-extra').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'length') {
+       SuitableLayer("line");
+       document.getElementById('selectLayer').style.display = 'block';
+       document.getElementById('selectAttribute').style.display = 'none';
+    }
+    if (document.getElementById('choice').value == 'area') {
+        SuitableLayer("polygon");
+        document.getElementById('selectLayer').style.display = 'block';
+        document.getElementById('selectAttribute').style.display = 'none';
+    }
+
+
+}
+
+
+</script>
+
+<script>
+  //Ovládání otevírání a zavírání postranní lišty, divu s atributy,nastavení a přepínání mezi záložkami
+    function OpenNav() { 
+            document.getElementById("navbar").style.width = "340px";
+            document.getElementById("navbar").style.overflow = "scroll";
+            document.getElementById("navbar").style.padding = "15px";
+        }
+
+        function CloseNav() {
+            document.getElementById("navbar").style.width = "0";
+            document.getElementById("navbar").style.overflow = "hidden";
+            document.getElementById("navbar").style.padding = "0px";
+        }
+
+        function CloseProperties() {
+            document.getElementById("show-properties").style.width = "0";
+            document.getElementById("show-properties").style.padding = "0px";
+            document.getElementById("show-properties").style.display = "none";
+            document.getElementById("closebtn-properties").style.display = "none";
+        }
+
+        function OpenProperties() { 
+            document.getElementById("show-properties").style.width = "340px";
+            document.getElementById("show-properties").style.padding = "15px";
+            document.getElementById("show-properties").style.display = "block";
+            document.getElementById("closebtn-properties").style.display = "block";
+        }
+
+        function CloseSettings() {
+            document.getElementById("settings").style.display = "none";
+            document.getElementById("closebtn-settings").style.display = "none";
+        }
+
+        function OpenSettings() { 
+            document.getElementById("settings").style.display = "block";
+            document.getElementById("closebtn-settings").style.display = "block";
+        }
+
+        function OpenAboutApp() { 
+            document.getElementById("about-app-div").style.display = "block";
+            document.getElementById("content-div").style.display = "none";
+            document.getElementById("legend-div").style.display = "none";
+            document.getElementById("content").classList.remove('content-active');
+            document.getElementById("about-app").classList.add('about-app-active');
+            document.getElementById("legend").classList.remove('legend-active');
+
+
+        }
+
+        function OpenContent() { 
+            document.getElementById("about-app-div").style.display = "none";
+            document.getElementById("legend-div").style.display = "none";
+            document.getElementById("content-div").style.display = "block";
+            document.getElementById("content").classList.add('content-active');
+            document.getElementById("about-app").classList.remove('about-app-active');
+            document.getElementById("legend").classList.remove('legend-active');
+        }
+
+        function OpenLegend() { 
+            document.getElementById("legend-div").style.display = "block";
+            document.getElementById("legend").classList.add('legend-active');
+            document.getElementById("content-div").style.display = "none";
+            document.getElementById("about-app-div").style.display = "none";
+            document.getElementById("content").classList.remove('content-active');
+            document.getElementById("about-app").classList.remove('about-app-active');
+
+        }
+
+</script>
+<div id="btn" onclick="OpenNav()">
+            <img src="images/icon_arrow.png" alt="strom" width="20" style="z-index: 9998; left: 30%;">
+        </div>
+
+<div id="map">
+
+</div>
+
+<div id="navbar" class='navbar'>
+  <div id="fixed" class='fixed'>
+  <a href="javascript:void(0)" onclick="OpenSettings()"><i class="fa fa-cogs"></i></a>
+  <a href="javascript:void(0)" class="closebtn" onclick="CloseNav()">&times;</a>
+
+<h1>GeONLINE</h1>
+
+<br><hr>
+</div>
+
+<a href="javascript:void(0)" class="about-app about-app-active" id="about-app" onclick="OpenAboutApp()"><h3>About</h3></a>
+<a href="javascript:void(0)" class="content" id="content" onclick="OpenContent()"><h3>Application</h3></a>
+<a href="javascript:void(0)" class="legend" id="legend" onclick="OpenLegend()"><h3>Legend</h3></a>
+<br><br>
+
+<div id="about-app-div">
+  <p class="about-app-paragraph about-app-paragraph-basic">This app was created as a part of bachelor thesis at the Department of Geoinformatics, Palacký University, Olomouc. Author: Daniel Urban, Thesis supervisor: Mgr. Rostislav Nétek, Ph.D.</p>
+  <h4>1. Upload data</h4>
+<p class="about-app-paragraph">First you need to upload data from your computer. Only geoJSON format is allowed. Once you choose a file, click on <b>UPLOAD</b> button.</p>
+<h4>2. Edit symbology</h4>
+<p class="about-app-paragraph">After uploading your data, you are able to edit basic symbology of the layer. You can click <b>ADD TO MAP</b> button.</p>
+<h4>3. Manage layers</h4>
+<p class="about-app-paragraph">Once you added new layer, in the <b>List of layers</b> you can show and hide layers.</p>
+<h4>4. Operation</h4>
+<p class="about-app-paragraph">There are plenty of operations to choose. Once you choose one, additional information will appear.</p>
+<h4>5. Download data</h4>
+<p class="about-app-paragraph">You can download new layer by clicking on the download button.</p>
+<h4>6. Settings</h4>
+<p class="about-app-paragraph">If you want to change settings, click on Settings button</p>
+  <button onclick="OpenContent()" class="button">Continue</button>
+
+  <hr><br>
+  <div>
+    <p>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
+    <p>Used JavaScript libraries: <a href="https://docs.mapbox.com/mapbox-gl-js/api/" target="_blank" title="Mapbox GL JS">Mapbox GL JS</a>, <a href="https://turfjs.org/" target="_blank" title="Turf.js">Turj.js</a> (also on <a href="https://github.com/Turfjs/turf" target="_blank" title="Turf.js on GitHub">GitHub</a>)</p>
+    <br>
+</div>
+</div>
+
+
+<div id="legend-div">
+  <p id="no-legend">Nothing to see here at the moment. Please upload the file.</p>
+</div>
+
+<div id="content-div">
+<br>
+<h3>Upload file</h3>
+<input type="file" id="selectFiles" accept=".geojson"/><br><br>
+<label for="file-name">Enter a layer name:</label><br>
+  <input type="text" id="file-name" name="file-name" value=""><br>
+<button id="import" class="button">Upload</button><br>
+
+
+<div id="upload-point" style="display: none">
+<br>
+<br>
+<label for="upload-point-color">Select fill color:</label><br>
+  <input type="color" id="upload-point-color" name="upload-point-color" value="#ff0000">
+<br>
+<label for="upload-point-size">Select point's size (pt):</label><br>
+<input type="number" id="upload-point-size" name="upload-point-size" min="1" value="5">
+<br>
+<label for="upload-point-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="upload-point-opacity">
+<br>
+</div>
+
+<div id="upload-line" style="display: none">
+<br>
+<br>
+<label for="upload-line-color">Select fill color:</label><br>
+  <input type="color" id="upload-line-color" name="upload-line-color" value="#ff0000">
+<br>
+<br>
+<label for="upload-line-width">Select width:</label><br>
+<input type="number" id="upload-line-width" name="upload-line-width" min="1" max="50" value="8">
+<br>
+<label for="upload-line-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="upload-line-opacity">
+<br>
+<label for="upload-line-join">Select line's join:</label><br>
+<select id="upload-line-join" name="upload-line-join">
+    <option value="bevel">Bevel</option>
+    <option value="round" selected>Round</option>
+    <option value="miter">Miter</option>
+</select>
+<br>
+<label for="upload-line-cap">Select line's cap:</label><br>
+<select id="upload-line-cap" name="upload-line-cap">
+    <option value="butt">Butt</option>
+    <option value="round" selected>Round</option>
+    <option value="square">Square</option>
+</select>
+<br>
+</div>
+
+<div id="upload-polygon" style="display: none">
+<br>
+<br>
+<label for="upload-polygon-color">Select fill color:</label><br>
+  <input type="color" id="upload-polygon-color" name="upload-polygon-color" value="#ff0000">
+<br>
+  <label for="upload-polygon-outline-color">Select outline color:</label><br>
+  <input type="color" id="upload-polygon-outline-color" name="upload-polygon-outline-color" value="#696969">
+<br>
+<label for="upload-polygon-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="upload-polygon-opacity">
+<br>
+</div>
+
+<div id="uploadLayer" style="display: none">
+<button onclick="UploadLayer()" class="button">Add to map</button>
+<br>
+</div>
+
+
+<hr><br>
+<h3>List of layers</h3>
+<div id="no-layers"><p>There are no layers to display at the moment. Please upload the file.</p></div>
+<div id="layers"></div>
+<div id="download"></div>
+
+<hr>
+
+<h3>Select operation</h3>
+<form>
+
+<br>
+<select id="choice" onclick='ChoiceTree()' onclick='SecondSuitableLayer()'>
+
+  <optgroup label="Measurement">
+    <option value="area">Calculate area</option>
+    <option value="length">Calculate length</option>
+  </optgroup>
+
+  <optgroup label="Analysis and transformation">
+    <option value="buffer">Buffer</option>
+    <option value="envelope">Envelope</option>
+    <option value="centroid">Get centroid coords</option>
+    <option value="linetopolygon">Line to polygon</option>
+    <option value="pointswithinpolygon">Points within polygon</option>
+    <option value="explode">Polygon to points</option>
+    <option value="simplify">Simplify polygon</option>
+    <option value="tin">TIN</option>
+    <option value="voronoi">Voronoi polygons</option>
+  </optgroup>
+
+  <optgroup label="Random">
+    <option value="randompoints">Create random points</option>
+    <option value="randomlines">Create random lines</option>
+    <option value="randompolygons">Create random polygons</option>
+  </optgroup>
+</select>
+
+<select id="selectLayer" onclick='SelectAttribute()'>
+    <option value="">Choose a layer</option>
+</select>
+
+<select id="selectAttribute">
+    <option>Select attributes</option>
+</select>
+
+
+
+<div id="buffer-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Buffer</h2>
+  <br>
+  <p>Creates buffer polygons around input features to a specified distance.</p>
+</div>
+<br>
+<label for="buffer-size">Select buffer size:</label><br>
+<input type="number" id="buffer-size" name="buffer-size" min="1" value="50">
+<br><br>
+<label for="buffer-unit">Select units:</label><br>
+<select id="buffer-unit" name="buffer-unit">
+    <option value="kilometers">Kilometers</option>
+    <option value="miles">Miles</option>
+</select>
+<br>
+<label for="buffer-color">Select fill color:</label><br>
+  <input type="color" id="buffer-color" name="buffer-color" value="#ff0000">
+<br>
+  <label for="buffer-outline-color">Select outline color:</label><br>
+  <input type="color" id="buffer-outline-color" name="buffer-outline-color" value="#ff0000">
+<br>
+<label for="buffer-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="buffer-opacity">
+<br>
+<label for="buffer-output-name">Layer's name:</label><br>
+  <input type="text" id="buffer-output-name" name="buffer-output-name" value="">
+<br>
+
+</div>
+
+
+<div id="pointswithinpolygon-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Points within polygon</h2>
+  <br>
+  <p>Finds Points that fall within (Multi)Polygon(s).</p>
+</div>
+<br>
+<label for="pointswithinpolygon-selectSecondLayer">Within polygon(s):</label><br>
+<select id="pointswithinpolygon-selectSecondLayer" name="pointswithinpolygon-selectSecondLayer">
+    <option value="">Choose a layer</option>
+</select>
+<br>
+<br>
+<label for="pointswithinpolygon-size">Select point's size (pt):</label><br>
+<input type="number" id="pointswithinpolygon-size" name="pointswithinpolygon-size" min="1" value="5">
+<br>
+<label for="pointswithinpolygon-color">Select fill color:</label><br>
+  <input type="color" id="pointswithinpolygon-color" name="pointswithinpolygon-color" value="#ff0000">
+<br>
+<label for="pointswithinpolygon-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="pointswithinpolygon-opacity">
+<br>
+<label for="pointswithinpolygon-output-name">Layer's name:</label><br>
+  <input type="text" id="pointswithinpolygon-output-name" name="pointswithinpolygon-output-name" value="">
+<br>
+</div>
+
+
+<div id="centroid-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Calculate centroid</h2>
+  <br>
+  <p>Takes one or more features and calculates the centroid using the mean of all vertices. This lessens the effect of small islands and artifacts when calculating the centroid of a set of polygons.</p>
+</div>
+<br>
+<label for="centroid-color">Select fill color:</label><br>
+  <input type="color" id="centroid-color" name="centroid-color" value="#ff0000">
+<br>
+<br>
+<label for="centroid-size">Select point's size (pt):</label><br>
+<input type="number" id="centroid-size" name="centroid-size" min="1" value="5">
+<br>
+<label for="centroid-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="centroid-opacity">
+<br>
+<label for="centroid-output-name">Layer's name:</label><br>
+  <input type="text" id="centroid-output-name" name="centroid-output-name" value="">
+<br>
+</div>
+
+
+<div id="tin-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  TIN</h2>
+  <br>
+  <p>Takes a set of points and creates a Triangulated Irregular Network , or a TIN for short, returned as a collection of Polygons. These are often used for developing elevation contour maps or stepped heat visualizations.</p>
+</div>
+<br>
+<label for="tin-color">Select fill color:</label><br>
+  <input type="color" id="tin-color" name="tin-color" value="#ff0000">
+<br>
+  <label for="tin-outline-tin">Select outline color:</label><br>
+  <input type="color" id="tin-outline-color" name="tin-outline-color" value="#696969">
+<br>
+<label for="tin-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="tin-opacity">
+<br>
+
+<label for="tin-output-name">Layer's name:</label><br>
+  <input type="text" id="tin-output-name" name="tin-output-name" value="">
+<br>
+</div>
+
+
+<div id="area-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Calculate area</h2>
+  <br>
+  <p>Takes one or more features and returns their area measure in square meters or kilometers.</p>
+</div>
+<br>
+<label for="area-unit">Select units:</label><br>
+<select id="area-unit" name="area-unit">
+    <option value="squarekilometers">Square kilometers</option>
+    <option value="squaremeters">Square meters</option>
+</select>
+</div>
+
+
+<div id="length-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Calculate length</h2>
+  <br>
+  <p>Takes a GeoJSON and measures its length in the specified units, (Multi)Point 's distance are ignored.</p>
+</div>
+<br>
+<label for="length-unit">Select units:</label><br>
+<select id="length-unit" name="length-unit">
+    <option value="kilometers">Kilometers</option>
+    <option value="miles">Miles</option>
+    <option value="degrees">Degrees</option>
+    <option value="radians">Radians</option>
+</select>
+</div>
+
+<div id="simplify-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Simplify</h2>
+  <br>
+  <p>Takes a GeoJSON object and returns a simplified version. Internally uses simplify-js to perform simplification using the Ramer-Douglas-Peucker algorithm.</p>
+</div>
+<br>
+
+<label for="simplify-tolerance">Select simplify tolerance (0 to 1):</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="simplify-tolerance">
+<br><br>
+<label for="simplify-quality">Simplify to high quality:</label><br>
+<select id="simplify-quality" name="simplify-quality">
+    <option value="true">Yes</option>
+    <option value="false" selected>No</option>
+</select>
+<br>
+<label for="simplify-color">Select fill color:</label><br>
+  <input type="color" id="simplify-color" name="simplify-color" value="#ff0000">
+<br>
+<br>
+<label for="simplify-outline-color">Select outline color:</label><br>
+  <input type="color" id="simplify-outline-color" name="simplify-outline-color" value="#ff0000">
+<br>
+<br>
+
+<label for="simplify-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="simplify-opacity">
+<br>
+<label for="simplify-output-name">Layer's name:</label><br>
+  <input type="text" id="simplify-output-name" name="simplify-output-name" value="">
+<br>
+</div>
+
+
+
+<div id="explode-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Polygon to points</h2>
+  <br>
+  <p>Takes a feature or set of features and returns all positions as points.</p>
+</div>
+<br>
+<label for="explode-color">Select fill color:</label><br>
+  <input type="color" id="explode-color" name="explode-color" value="#ff0000">
+<br>
+<br>
+<label for="explode-size">Select point's size (pt):</label><br>
+<input type="number" id="explode-size" name="explode-size" min="1" value="5">
+<br>
+<label for="explode-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="explode-opacity">
+<br>
+<label for="explode-output-name">Layer's name:</label><br>
+  <input type="text" id="explode-output-name" name="explode-output-name" value="">
+<br>
+</div>
+
+<div id="linetopolygon-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Line to polygon</h2>
+  <br>
+  <p>Converts (Multi)LineString(s) to Polygon(s).</p>
+</div>
+<br>
+<label for="linetopolygon-color">Select fill color:</label><br>
+  <input type="color" id="linetopolygon-color" name="linetopolygon-color" value="#ff0000">
+<br>
+<br>
+<label for="linetopolygon-outline-color">Select outline color:</label><br>
+  <input type="color" id="linetopolygon-outline-color" name="linetopolygon-outline-color" value="#ff0000">
+<br>
+<br>
+
+<label for="linetopolygon-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="linetopolygon-opacity">
+<br>
+<label for="linetopolygon-output-name">Layer's name:</label><br>
+  <input type="text" id="linetopolygon-output-name" name="linetopolygon-output-name" value="">
+<br>
+</div>
+
+<div id="voronoi-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Voronoi polygons</h2>
+  <br>
+  <p>Voronoi polygons are created so that every location within a polygon is closer to the sample point in that polygon than any other sample point. After the polygons are created, neighbors of a sample point are defined as any other sample point whose polygon shares a border with the chosen sample point.</p>
+</div>
+<br>
+<label for="voronoi-color">Select fill color:</label><br>
+  <input type="color" id="voronoi-color" name="voronoi-color" value="#ff0000">
+<br>
+<br>
+<label for="voronoi-outline-color">Select outline color:</label><br>
+  <input type="color" id="voronoi-outline-color" name="voronoi-outline-color" value="#696969">
+<br>
+<br>
+
+<label for="voronoi-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="voronoi-opacity">
+<br>
+<label for="voronoi-output-name">Layer's name:</label><br>
+  <input type="text" id="voronoi-output-name" name="voronoi-output-name" value="">
+<br>
+</div>
+
+<div id="envelope-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Envelope</h2>
+  <br>
+ <p>Takes any number of features and returns a rectangular Polygon that encompasses all vertices.</p>
+</div>
+<br>
+<br>
+<label for="envelope-color">Select fill color:</label><br>
+  <input type="color" id="envelope-color" name="envelope-color" value="#ff0000">
+<br>
+<br>
+<label for="envelope-outline-color">Select outline color:</label><br>
+  <input type="color" id="envelope-outline-color" name="envelope-outline-color" value="#ff0000">
+<br>
+<br>
+
+<label for="envelope-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="envelope-opacity">
+<br>
+<label for="envelope-output-name">Layer's name:</label><br>
+  <input type="text" id="envelope-output-name" name="envelope-output-name" value="">
+<br>
+</div>
+
+<div id="randompoints-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Create random points</h2>
+  <br>
+ <p>This function returns a random points.</p>
+</div>
+<br>
+<label for="randompoints-number">Enter number of points:</label><br>
+<input type="number" id="randompoints-number" name="randompoints-number"><br>
+<br>
+<label for="randompoints-color">Select fill color:</label><br>
+  <input type="color" id="randompoints-color" name="randompoints-color" value="#ff0000">
+<br>
+<br>
+<label for="randompoints-size">Select point's size (pt):</label><br>
+<input type="number" id="randompoints-size" name="randompoints-size" min="1" value="5">
+<br>
+<label for="randompoints-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="randompoints-opacity">
+<br>
+<label for="randompoints-output-name">Layer's name:</label><br>
+  <input type="text" id="randompoints-output-name" name="randompoints-output-name" value="">
+<br>
+</div>
+
+
+<div id="randomlines-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Create random lines</h2>
+  <br>
+ <p>This function returns a random lines.</p>
+</div>
+<br>
+<label for="randomlines-size">Enter number of lines:</label><br>
+<input type="number" id="randomlines-size" name="randomlines-size"><br>
+<br>
+<label for="randomlines-vertices">Enter number of vercites for each line:</label><br>
+<input type="number" id="randomlines-vertices" name="randomlines-vertices" value="1000"><br>
+<br>
+<label for="randomlines-color">Select fill color:</label><br>
+  <input type="color" id="randomlines-color" name="randomlines-color" value="#ff0000">
+<br>
+<br>
+<label for="randomlines-width">Select width:</label><br>
+<input type="number" id="randomlines-width" name="randomlines-width" min="1" max="50" value="8">
+<br>
+<label for="randomlines-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="randomlines-opacity">
+<br>
+<label for="randomlines-join">Select line's join:</label><br>
+<select id="randomlines-join" name="randomlines-join">
+    <option value="bevel">Bevel</option>
+    <option value="round" selected>Round</option>
+    <option value="miter">Miter</option>
+</select>
+<br>
+<label for="randomlines-cap">Select line's cap:</label><br>
+<select id="randomlines-cap" name="randomlines-cap">
+    <option value="butt">Butt</option>
+    <option value="round" selected>Round</option>
+    <option value="square">Square</option>
+</select>
+<br>
+<label for="randomlines-output-name">Layer's name:</label><br>
+  <input type="text" id="randomlines-output-name" name="randomlines-output-name" value="">
+<br>
+</div>
+
+
+<div id="randompolygons-extra" style="display: none">
+<br>
+<div class="infobox">
+  <i class="fa fa-info-circle" style="font-size:26px;color:white;"></i>
+  <h2>  Create random polygons</h2>
+  <br>
+ <p>This function returns a random polygons.</p>
+</div>
+<br>
+<label for="randompolygons-size">Enter number of polygons:</label><br>
+<input type="number" id="randompolygons-size" name="randompolygons-size"><br>
+<br>
+<label for="randompolygons-color">Select fill color:</label><br>
+  <input type="color" id="randompolygons-color" name="randompolygons-color" value="#ff0000">
+<br>
+<br>
+<label for="randompolygons-outline-color">Select outline color:</label><br>
+  <input type="color" id="randompolygons-outline-color" name="randompolygons-outline-color" value="#ff0000">
+<br>
+<br>
+
+<label for="randompolygons-opacity">Select opacity:</label><br>
+<input type="range" min="0" max="1" value="1" step="0.01" class="slider" id="randompolygons-opacity">
+<br>
+<label for="randompolygons-output-name">Layer's name:</label><br>
+  <input type="text" id="randompolygons-output-name" name="randompolygons-output-name" value="">
+<br>
+</div>
+</form>
+
+
+
+<br>
+<button onclick="Execute()" class="button">Submit</button>
+
+
+ <p id="output"></p>
+  </div>
+</div>
+
+<div id="show-properties" class="show-properties">
+  Attributes <a href="javascript:void(0)" class="closebtn" id="closebtn-properties" onclick="CloseProperties()">&times;</a>
+<br><hr><br>
+  <div id="properties" class="properties"></div>
+</div>
+
+<div id="settings" class="settings">
+  <h2>Settings</h2> <a href="javascript:void(0)" class="closebtn" id="closebtn-settings" onclick="CloseSettings()">&times;</a>
+<br><hr><br>
+
+<input type="checkbox" id="edit-layer" name="edit-layer" value="Yes" checked>
+<label for="edit-layer"> Edit layer's symbology</label><br>
+<p class="settings-paragraph">This function allows to edit layer's symbology before adding to the map. If not checked, the layer will be added with default symbology.</p>
+<input type="checkbox" id="properties-check" name="properties-check" value="Yes" checked>
+<label for="properties-check"> Show attributes on click</label><br>
+<p class="settings-paragraph">If checked, click the layer on the map to display the attributes.
+</p><br>
+<br>
+<button onclick="CloseSettings()" class="button">Save</button>
+</div>
+
+
+<script src='map.js'></script>
+ 
+</body>
+</html>
